@@ -80,4 +80,9 @@ class Emprunt
 
         return $this;
     }
+
+    public function estEnCours(): bool
+    {
+        return $this->date_retour === null;
+    }
 }

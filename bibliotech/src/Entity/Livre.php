@@ -166,4 +166,31 @@ class Livre
 
         return $this;
     }
+
+    public function getNombreEmprunts() : int
+    {
+        return count($this->emprunts_associes) ;
+    }
+
+    public function getEmpruntsEnCours(): int
+    {
+        $compteur = 0 ;
+
+        foreach ($this->emprunts_associes as $emprunt) {
+            if ($emprunt->estEnCours()) {
+                $compteur++ ;
+            }
+        }
+        return $compteur ;
+    }
+
+    public function getExemplairesDisponibles(): int
+    {
+        return max(0, $this->exemplaires - $this->getEmpruntsEnCours()) ;
+    }
+
+    public function estDisponible(): bool
+    {
+        return $this->getExemplairesDisponibles() > 0 ;
+    }
 }
