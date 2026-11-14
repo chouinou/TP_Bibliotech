@@ -1,0 +1,105 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue — BiblioTech{% endblock %}
+
+{% block body %}
+<section class="catalogue-entete">
+    <div>
+        <h1 class="page-titre">Le catalogue</h1>
+        <p class="page-sous-titre">
+            {{ livres|length }}
+            {{ livres|length > 1 ? 'livres' : 'livre' }}
+        </p>
+    </div>
+
+    <form method="get" class="filtres">
+
+        <select name="genre">
+            <option value="">Tous les genres</option>
+            {% for genre in genres %}
+                <option value="{{ genre }}"
+                    {{ genre == filtres.genre ? 'selected' : '' }}>
+                    {{ genre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="auteur">
+            <option value="">Tous les auteurs</option>
+
+            {% for auteur in auteurs %}
+                <option value="{{ auteur }}"
+                    {{ auteur == filtres.auteur ? 'selected' : '' }}>
+                    {{ auteur }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="tri">
+            <option value="" {{ filtres.tri == '' ? 'selected' : '' }}>
+                Trier par titre
+            </option>
+
+            <option value="annee_desc"
+                {{ filtres.tri == 'annee_desc' ? 'selected' : '' }}>
+                Plus récents d'abord
+            </option>
+
+            <option value="annee_asc"
+                {{ filtres.tri == 'annee_asc' ? 'selected' : '' }}>
+                Plus anciens d'abord
+            </option>
+        </select>
+
+        <button type="submit" class="bouton">Filtrer</button>
+
+        <a href="{{ path('app_catalogue') }}" class="lien-reset">
+            Réinitialiser
+        </a>
+    </form>
+</section>
+
+<section class="grille">
+    {% for livre in livres %}
+        <article class="carte">
+            <a href="{{ path('app_livre', {id: livre.id}) }}" class="carte-couverture">
+                {% if livre.couverture %}
+                    <img src="{{ livre.couverture }}" alt="{{ livre.titre }}">
+                {% else %}
+                    <img src="https://placehold.co/400x600?text=Livre"
+                         alt="{{ livre.titre }}">
+                {% endif %}
+
+                {% if livre.estDisponible %}
+                    <span class="badge badge-disponible">
+                        {{ livre.exemplairesDisponibles }}
+                        /
+                        {{ livre.exemplaires }}
+                        disponibles
+                    </span>
+                {% else %}
+                    <span class="badge badge-indisponible">
+                        Indisponible
+                    </span>
+                {% endif %}
+            </a>
+            <div class="carte-contenu">
+                <span class="genre">{{ livre.genre }}</span>
+                <h2 class="carte-titre">{{ livre.titre }}</h2>
+                <p class="carte-auteur">{{ livre.auteur }}</p>
+                <div class="carte-bas">
+                    <span class="carte-annee">{{ livre.annee }}</span>
+                    <a href="{{ path('app_livre', {id: livre.id}) }}" class="bouton bouton-petit">
+                        Voir
+                    </a>
+                </div>
+            </div>
+        </article>
+
+    {% else %}
+        <p>Aucun livre ne correspond à votre recherche.</p>
+    {% endfor %}
+
+</section>
+{% endblock %}

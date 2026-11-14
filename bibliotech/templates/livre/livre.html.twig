@@ -1,0 +1,138 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ livre.titre }} — BiblioTech{% endblock %}
+
+{% block body %}
+
+<main class="conteneur">
+    
+    <nav class="fil-ariane">
+        <a href="{{ path('app_catalogue') }}">Catalogue</a>
+        <span>›</span>
+        <a href="{{ path('app_catalogue', {genre: livre.genre}) }}">
+            {{ livre.genre }}
+        </a>
+        <span>›</span>
+        <span class="fil-actuel">{{ livre.titre }}</span>
+    </nav>
+
+    <section class="fiche">
+        <div class="fiche-couverture">
+            {% if livre.couverture %}
+                <img src="{{ livre.couverture }}" alt="{{ livre.titre }}">
+            {% else %}
+                <img src="https://placehold.co/400x600?text=Livre"
+                     alt="{{ livre.titre }}">
+            {% endif %}
+        </div>
+
+        <div class="fiche-details">
+            <span class="genre">{{ livre.genre }}</span>
+            <h1 class="fiche-titre">{{ livre.titre }}</h1>
+            <p class="fiche-auteur">
+                de <strong>{{ livre.auteur }}</strong>
+            </p>
+
+            <p class="fiche-resume">{{ livre.resume }}</p>
+
+            <div class="fiche-infos"
+                <div class="info">
+                    <span class="info-label">Parution</span>
+                    <span class="info-valeur">{{ livre.annee }}</span>
+                </div>
+
+                <div class="info">
+                    <span class="info-label">Exemplaires</span>
+                    <span class="info-valeur">{{ livre.exemplaires }}</span>
+                </div>
+
+                <div class="info">
+                    <span class="info-label">Emprunts</span>
+                    <span class="info-valeur">{{ livre.nombreEmprunts }}</span>
+                </div>
+            </div>
+
+            {% if livre.estDisponible %}
+
+                <p class="dispo dispo-ok">
+                    {{ livre.exemplairesDisponibles }}
+                    exemplaire{{ livre.exemplairesDisponibles > 1 ? 's' }}
+                    disponible{{ livre.exemplairesDisponibles > 1 ? 's' }}
+                    sur {{ livre.exemplaires }}
+                </p>
+
+            {% else %}
+                <p class="dispo dispo-indisponible">
+                    Aucun exemplaire disponible pour le moment
+                </p>
+            {% endif %}
+
+            <div class="fiche-action">
+                <button type="button"
+                        class="bouton bouton-grand"
+                        {% if not livre.estDisponible %}disabled{% endif %}>
+                    Réserver ce livre
+                </button>
+            </div>
+        </div>
+    </section>
+
+    {# Derniers emprunts #}
+    <section class="section">
+        <h2 class="section-titre">Derniers emprunts</h2>
+
+        <table class="tableau">
+            <thead>
+                <tr>
+                    <th>Adhérent</th>
+                    <th>Emprunté le</th>
+                    <th>Ville</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for emprunt in derniersEmprunts %}
+                    <tr>
+                        <td>{{ emprunt.idAdherent.nom }}</td>
+                        <td>{{ emprunt.dateEmprunt|date('d/m/Y') }}</td>
+                        <td>{{ emprunt.idAdherent.ville }}</td>
+                        <td>
+                            {% if emprunt.estEnCours %}
+                                <span class="statut statut-en-cours">
+                                    En cours
+                                </span>
+                            {% else %}
+                                <span class="statut statut-rendu">
+                                    Rendu le
+                                    {{ emprunt.dateRetour|date('d/m/Y') }}
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">
+                            Aucun emprunt pour ce livre.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    {% if similaires is not empty %}
+        <section class="section">
+            <h2 class="section-titre">Du même genre</h2>
+            <div class="grille">
+                {% for livreSimilaire in similaires %}
+                    {% include 'livre/_carte.html.twig' with {
+                        livre: livreSimilaire
+                    } %}
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

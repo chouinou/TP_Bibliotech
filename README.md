@@ -298,10 +298,10 @@ Aucune maquette n'est fournie : tu réutilises les styles existants.
 
 ## Liste de vérification avant de rendre
 
-- [ ] `php bin/console doctrine:fixtures:load -n` fonctionne sans erreur.
-- [ ] `php bin/console debug:router` affiche `app_catalogue` et `app_livre`.
-- [ ] Le catalogue affiche les 12 livres, et chaque filtre fonctionne seul et combiné aux autres.
-- [ ] Aucun livre n'affiche un nombre d'exemplaires disponibles négatif.
-- [ ] `/livre/9999` affiche une page 404.
-- [ ] Aucun texte de la maquette n'est resté écrit en dur à la place d'une donnée.
-- [ ] Aucune adresse `href="#"` ne reste dans les templates (sauf le bouton « Réserver »).
+- [X] `php bin/console doctrine:fixtures:load -n` fonctionne sans erreur.
+- [X] `php bin/console debug:router` affiche `app_catalogue` et `app_livre`.
+- [X] Le catalogue affiche les 12 livres, et chaque filtre fonctionne seul et combiné aux autres.
+- [X] Aucun livre n'affiche un nombre d'exemplaires disponibles négatif.
+- [X] `/livre/9999` affiche une page 404.
+- [X] Aucun texte de la maquette n'est resté écrit en dur à la place d'une donnée.
+- [X] Aucune adresse `href="#"` ne reste dans les templates (sauf le bouton « Réserver »).
